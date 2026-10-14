@@ -28,3 +28,14 @@
 - WhatsApp uses click-to-chat; it does not send messages or verify delivery without a provider integration.
 - The default Express session store is suitable for demonstration and single-process local use, but should be replaced by a persistent shared store before multi-instance production deployment.
 - Payment corrections are not destructive: a future correction workflow should add explicit reversal records rather than editing history.
+
+
+## Review hardening and tailor-first improvements — complete
+- [x] Normalize Add Customer routes; dashboard due/overdue/fitting/status links apply server-side filters.
+- [x] Escape measurement labels and values; use garment-specific Indian tailoring choices and measurement templates.
+- [x] Restrict measurement profiles to the selected customer and matching garment, with backend ownership checks.
+- [x] Validate real calendar dates, numeric measurements, precise rupee inputs, and transactional payment balances.
+- [x] Require ready order status before preparing messages; prevent duplicate notification races and retain the existing message response.
+- [x] Add origin validation for auth and business API writes; use same-origin `SameSite=Lax` sessions.
+- [x] Strengthen CSV formula protection, bound stale auth limiter entries, and make the dashboard/mobile navigation shop-floor oriented.
+- [x] Expand isolated integration coverage for filters, invalid data, concurrent payment attempts and cross-shop exports/access.

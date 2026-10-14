@@ -17,6 +17,8 @@ The existing measurement snapshot contract is unchanged: creating an order copie
 ## API contracts
 Core routes remain available: `/api/auth/*`, `/api/shop`, `/api/customers`, `/api/measurements`, `/api/orders`, `/api/orders/:id/status` and `/api/dashboard`.
 
+Order listing accepts validated `status`, `due=today`, `overdue=1` and `fitting=today` filters; search and status may be combined.
+
 Phase 2 routes are:
 
 | Route | Purpose |
@@ -36,7 +38,7 @@ Person 2 can add provider integrations using `notifications.provider_reference` 
 The editorial small-business utility design remains: warm neutrals, deep teal foundation, saffron attention accents, restrained shadows, clear financial hierarchy and touch-friendly controls. Order details use the same system and add a clear payment ledger, message preparation panel and print-only receipt/job-sheet layouts.
 
 ## Security posture
-Production startup requires `SESSION_SECRET` with at least 32 characters. Production cookies are HttpOnly, Secure and SameSite=None for HTTPS previews; local development uses an explicit local-only fallback and SameSite=Lax. Login and registration normalize email, validate passwords, renew the session, and have a basic per-IP attempt limiter. The default Express memory session store is not suitable for a multi-instance production deployment; use a persistent shared session store before scaling out. No credentials, hashes or session values are exported.
+Production startup requires `SESSION_SECRET` with at least 32 characters. Production cookies are HttpOnly, Secure and SameSite=Lax for same-origin sessions; local development uses an explicit local-only fallback and SameSite=Lax. Login and registration normalize email, validate passwords, renew the session, and have a bounded per-process per-IP attempt limiter (not shared across instances). The default Express memory session store is not suitable for a multi-instance production deployment; use a persistent shared session store before scaling out. No credentials, hashes or session values are exported.
 
 ## Demonstration workflow
 1. Run `npm install && npm run dev`, open the app and register a shop.
