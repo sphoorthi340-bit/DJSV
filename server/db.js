@@ -59,7 +59,7 @@ CREATE INDEX IF NOT EXISTS idx_notifications_shop_order ON notifications(shop_id
 `);
 
 export const STATUSES = ['New Order','Measurements Taken','Cutting','Stitching','Fitting Ready','Alteration Required','Ready for Pickup','Delivered','Cancelled'];
-export const GARMENTS = ['Shirt','Trousers','Kurta','Blouse','Dress','Other'];
+export const GARMENTS = ['Shirt','Trousers','Kurta','Blouse','Dress','Other','Salwar Suit','Kurta/Kurti','Lehenga/Choli','Petticoat','Saree Fall and Pico','Kurta-Pyjama','Waistcoat','School Uniform','Garment Alteration'];
 export const PAYMENT_METHODS = ['Cash','UPI','Bank transfer','Card','Other'];
 export const NOTIFICATION_PURPOSES = ['Fitting Ready','Ready for Pickup'];
 export const now = () => new Date().toISOString();
@@ -68,7 +68,8 @@ export const orderIsComplete = (status) => ['Delivered','Cancelled'].includes(st
 export const isOverdue = (order, today = todayIST()) => !orderIsComplete(order.status) && order.due_date < today;
 export const makeReference = () => `SF-${new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Kolkata', year:'2-digit', month:'2-digit', day:'2-digit' }).format(new Date()).replaceAll('/','')}-${Math.random().toString(36).slice(2,6).toUpperCase()}`;
 export const parseJson = (value, fallback = {}) => { try { return JSON.parse(value); } catch { return fallback; } };
-export const toPaise = (rupees) => Math.round(Number(rupees) * 100);
+// Existing orders store totals in a REAL column; keep historical values readable. New writes validate decimal strings via parsePaise in the API.
+export const toPaise = (rupees) => Number.isFinite(Number(rupees)) ? Math.round(Number(rupees) * 100) : 0;
 export const inr = (paise) => (Number(paise || 0) / 100).toFixed(2);
 export const publicUser = (user) => ({ id: user.id, name: user.name, email: user.email, shopId: user.shop_id });
 export const customerForShop = (id, shopId) => db.prepare('SELECT * FROM customers WHERE id=? AND shop_id=?').get(id, shopId);

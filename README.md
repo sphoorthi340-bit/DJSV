@@ -15,7 +15,7 @@ Open `http://localhost:3000`, create the first shop account, and use the workspa
 NODE_ENV=production SESSION_SECRET="use-a-random-secret-at-least-32-characters" npm start
 ```
 
-Production requires the secret and sets Secure, HttpOnly, SameSite=None cookies. The local fallback is intentionally for development only. Express's default in-memory session store is not suitable for multi-instance production; replace it with a persistent shared store before scaling out.
+Production requires the secret and sets Secure, HttpOnly, SameSite=Lax cookies. If deployed behind a trusted one-hop reverse proxy, set `TRUST_PROXY=1` so Express can recognize HTTPS correctly. The local fallback is intentionally for development only. Express's default in-memory session store is not suitable for multi-instance production; replace it with a persistent shared store before scaling out. Authentication attempts are rate-limited per process; use a shared limiter for multi-instance deployments.
 
 ## Complete workflow
 
@@ -32,6 +32,6 @@ npm run check
 npm test
 ```
 
-The test suite covers the existing core domain rules plus an isolated Phase 2 integration workflow for registration, payments, overpayment rejection, notification history, CSV output and unauthenticated access. See [`plan.md`](plan.md) for the data model, API contracts, security posture and a college-demo script. See [`TODO.md`](TODO.md) for completed scope and known limitations.
+The test suite covers core domain rules and isolated integration flows for registration, payment precision and concurrency, date validation, garment/profile matching, date filters, notification readiness and duplicates, formula-safe CSV, origin checks and cross-shop isolation. See [`plan.md`](plan.md) for the data model, API contracts, security posture and a college-demo script. See [`TODO.md`](TODO.md) for completed scope and known limitations.
 
 WhatsApp remains click-to-chat only: StitchFlow does not claim that a customer received a message without a real provider integration. Payment history is auditable and not silently deleted.
