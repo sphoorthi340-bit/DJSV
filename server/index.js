@@ -31,7 +31,7 @@ app.post('/api/auth/register', async (req, res) => {
   if (exists) return fail(res, 409, 'An account with that email already exists.');
   const timestamp = now();
   const create = db.transaction(() => {
-    const shop = db.prepare('INSERT INTO shops (name, phone, created_at, updated_at) VALUES (?,?,?,?,?)').run(String(shopName).trim(), cleanPhone(phone), timestamp, timestamp);
+    const shop = db.prepare('INSERT INTO shops (name, phone, created_at, updated_at) VALUES (?,?,?,?)').run(String(shopName).trim(), cleanPhone(phone), timestamp, timestamp);
     const user = db.prepare('INSERT INTO users (shop_id,name,email,password_hash,created_at) VALUES (?,?,?,?,?)').run(shop.lastInsertRowid, String(name).trim(), String(email).trim().toLowerCase(), bcrypt.hashSync(password, 12), timestamp);
     return db.prepare('SELECT * FROM users WHERE id=?').get(user.lastInsertRowid);
   });
